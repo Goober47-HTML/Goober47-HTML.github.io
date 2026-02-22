@@ -43,64 +43,11 @@
     modelViewer.play();
   }
 
-  modelViewer.addEventListener('load', async () => {
-    console.log("LOAD EVENT FIRED");
-
-    // Wait for model + sceneGraphRoot
-    while (!modelViewer.model || !modelViewer.model.sceneGraphRoot) {
-      console.log("Waiting for model.sceneGraphRoot...");
-      await new Promise(r => setTimeout(r, 50));
-    }
-
-    console.log("MODEL + SCENE READY");
-
-    const root = modelViewer.model.sceneGraphRoot;
-
-    // Print tree
-    function printTree(node, depth = 0) {
-      console.log(" ".repeat(depth * 2) + "- " + node.name);
-      if (node.children) {
-        for (const child of node.children) {
-          printTree(child, depth + 1);
-        }
-      }
-    }
-
-    console.log("=== SCENE GRAPH ===");
-    printTree(root);
-
-    // Recursive search
-    function findNode(node, name) {
-      if (node.name === name) return node;
-      if (!node.children) return null;
-      for (const child of node.children) {
-        const result = findNode(child, name);
-        if (result) return result;
-      }
-      return null;
-    }
-
-    const leftEye = findNode(root, 'leye');
-    const rightEye = findNode(root, 'reye');
-
-    console.log("FOUND leftEye:", leftEye);
-    console.log("FOUND rightEye:", rightEye);
-
-    if (!leftEye || !rightEye) {
-      console.warn("Eyes not found");
-      return;
-    }
-
-    window.addEventListener('mousemove', (event) => {
-      const x = (event.clientX / window.innerWidth) * 2 - 1;
-      const y = (event.clientY / window.innerHeight) * 2 - 1;
-
-      leftEye.rotation.y = x * 0.5;
-      leftEye.rotation.x = -y * 0.5;
-
-      rightEye.rotation.y = x * 0.5;
-      rightEye.rotation.x = -y * 0.5;
-    });
+  // Auto‑play animation as soon as the model loads
+  modelViewer.addEventListener("load", () => {
+    console.log("MODEL LOADED — starting Idle animation");
+    modelViewer.animationName = "Idle";
+    modelViewer.play();
   });
 </script>
 
