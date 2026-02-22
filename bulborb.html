@@ -37,7 +37,7 @@
 </model-viewer>
 
 <!-- Animation Buttons -->
-  playAnimation('Idle')>Idle</button>
+  playAnimation('Idle')>Idle
 <button onclick="playAnimation('Walk')">Walk</button>
 <button onclick="playAnimation('Idle')">Idle</button>
   
@@ -50,6 +50,7 @@
     const model = document.getElementById('bulborb');
     model.animationName = name;
     model.play();
+    playAnimation('Idle')>Idle
   }
 </script>
 
