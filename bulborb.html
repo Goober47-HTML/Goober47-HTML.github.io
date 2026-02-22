@@ -4,14 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.3.0/dist/model-viewer.min.js"></script>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <title>WEBSITE!!</title>
+  <title>Bulborb</title>
 </head>
 <body>
-<script>
-window.addEventListener("error", e => console.log("ERROR:", e.message));
-window.addEventListener("unhandledrejection", e => console.log("PROMISE ERROR:", e.reason));
-</script>
+
 <h1>HELLO!</h1>
 
 <p style="font-family: 'Comic Sans MS'">i am bulborb</p>
@@ -42,23 +38,20 @@ window.addEventListener("unhandledrejection", e => console.log("PROMISE ERROR:",
     modelViewer.play();
   }
 
-  // Correct event — fires when the GLB is fully parsed
   modelViewer.addEventListener('load', async () => {
     console.log("LOAD EVENT FIRED");
 
-    // Wait until model + scene exist
-    while (!modelViewer.model || !modelViewer.model.scene) {
-      console.log("Waiting for model.scene...");
+    // Wait for model + sceneGraphRoot
+    while (!modelViewer.model || !modelViewer.model.sceneGraphRoot) {
+      console.log("Waiting for model.sceneGraphRoot...");
       await new Promise(r => setTimeout(r, 50));
     }
 
     console.log("MODEL + SCENE READY");
 
-    playAnimation('Idle');
+    const root = modelViewer.model.sceneGraphRoot;
 
-    const root = modelViewer.model.scene;
-
-    // Debug: print entire tree
+    // Print tree
     function printTree(node, depth = 0) {
       console.log(" ".repeat(depth * 2) + "- " + node.name);
       if (node.children) {
@@ -93,17 +86,9 @@ window.addEventListener("unhandledrejection", e => console.log("PROMISE ERROR:",
       return;
     }
 
-    // Log rotation every frame
-    modelViewer.addEventListener('frame', () => {
-      console.log("LeftEye rot:", leftEye.rotation);
-      console.log("RightEye rot:", rightEye.rotation);
-    });
-
     window.addEventListener('mousemove', (event) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = (event.clientY / window.innerHeight) * 2 - 1;
-
-      console.log("Setting rotation to:", x, y);
 
       leftEye.rotation.y = x * 0.5;
       leftEye.rotation.x = -y * 0.5;
@@ -113,10 +98,6 @@ window.addEventListener("unhandledrejection", e => console.log("PROMISE ERROR:",
     });
   });
 </script>
-
-<a href="models.html">
-  <button>Go Back</button>
-</a>
 
 </body>
 </html>
