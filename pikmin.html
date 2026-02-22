@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.3.0/dist/model-viewer.min.js"></script>
+  <title>Bulborb</title>
+</head>
+<body>
+
+<h1>HELLO!</h1>
+
+<p style="font-family: 'Comic Sans MS'">i am bulborb</p>
+<p style="font-family: 'Comic Sans MS'">|</p>
+<p style="font-family: 'Comic Sans MS'">\/</p>
+
+<model-viewer id="pikmin"
+              src="pikmin.glb"
+              alt="Bulborb"
+              camera-controls
+              auto-rotate
+              shadow-intensity="1"
+              reveal="auto"
+              expose-attributes="*"
+              style="width: 600px; height: 400px;">
+</model-viewer>
+
+<button onclick="playAnimation('Walk')">Walk</button>
+<button onclick="playAnimation('Idle')">Idle</button>
+
+<!-- ⭐ YOUR GO BACK BUTTON IS RIGHT HERE -->
+<a href="models.html">
+  <button>Go Back</button>
+</a>
+
+<script>
+  console.log("SCRIPT LOADED");
+
+  const modelViewer = document.getElementById('pikmin');
+
+  function playAnimation(name) {
+    modelViewer.animationName = name;
+    modelViewer.play();
+  }
+
+  // Auto‑play animation as soon as the model loads
+  modelViewer.addEventListener("load", () => {
+    console.log("MODEL LOADED — starting Idle animation");
+    modelViewer.animationName = "Idle";
+    modelViewer.play();
+  });
+</script>
+
+</body>
+</html>
 
