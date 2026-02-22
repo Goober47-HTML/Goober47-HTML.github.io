@@ -26,18 +26,32 @@
 
 </p>
 
-<model-viewer src="model.glb"
-              alt="3D model"
-              auto-rotate
+<model-viewer id="bulborb"
+              src="model.glb"
+              alt="Bulborb"
               camera-controls
+              auto-rotate
               shadow-intensity="1"
-              autoplay
-              animation-name="Walk"
               style="width: 600px; height: 400px;">
 </model-viewer>
 
+<!-- Animation Buttons -->
+<button onclick="playAnimation('Walk')">Walk</button>
+<button onclick="playAnimation('Idle')">Idle</button>
+<button onclick="playAnimation('Attack')">Attack</button>
+
+<script>
+  function playAnimation(name) {
+    const model = document.getElementById('bulborb');
+    model.animationName = name;
+    model.play();
+  }
+</script>
+
+
 </body>
 </html>
+
 
 
 
