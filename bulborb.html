@@ -28,6 +28,7 @@
 <button onclick="playAnimation('Idle')">Idle</button>
 
 <script>
+  console.log("SCRIPT LOADED");
   const modelViewer = document.getElementById('bulborb');
 
   function playAnimation(name) {
@@ -39,6 +40,9 @@
     while (!modelViewer.model || !modelViewer.model.scene) {
       await new Promise(r => setTimeout(r, 50));
     }
+    modelViewer.addEventListener('model-visibility', () => {
+  console.log("MODEL-VISIBILITY FIRED");
+});
 
     playAnimation('Idle');
 
