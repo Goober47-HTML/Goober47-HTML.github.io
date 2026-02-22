@@ -53,6 +53,20 @@
   
 <button onclick="playAnimation('Walk')">Walk</button>
 <button onclick="playAnimation('Idle')">Idle</button>
+
+
+<script>
+  function playAnimation(name) {
+    const model = document.getElementById('bulborb');
+    model.animationName = name;
+    model.play();
+  }
+
+  // Wait for the MODEL to finish loading, not just the page
+  document.getElementById('bulborb').addEventListener('load', () => {
+    playAnimation('Idle');
+  });
+</script>
   
 <a href="models.html">
   <button>Go Back</button>
