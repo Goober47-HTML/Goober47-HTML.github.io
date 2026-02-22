@@ -68,25 +68,34 @@
   });
 </script>
 
-  <script>
+<script>
+  function playAnimation(name) {
+    const model = document.getElementById('bulborb');
+    model.animationName = name;
+    model.play();
+  }
+
   const modelViewer = document.getElementById('bulborb');
 
-  modelViewer.addEventListener('load', () => {
-    const scene = modelViewer.model;
+  // Start Idle animation when model is actually ready
+  modelViewer.addEventListener('model-visibility', () => {
+    playAnimation('Idle');
 
-    // Get the eye bones
-    const leftEye = scene.getObjectByName('leye');
-    const rightEye = scene.getObjectByName('reye');
+    const model = modelViewer.model;
 
-    // Track mouse movement
+    // TODO: update these names after checking your GLB
+    const leftEye = model.getObjectByName('leye');
+    const rightEye = model.getObjectByName('reye');
+
+    if (!leftEye || !rightEye) {
+      console.warn("Eye bones not found — check exact names in the GLB");
+      return;
+    }
+
     window.addEventListener('mousemove', (event) => {
-      if (!leftEye || !rightEye) return;
-
-      // Get mouse position as -1 to 1
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = (event.clientY / window.innerHeight) * 2 - 1;
 
-      // Rotate eyes toward mouse
       leftEye.rotation.y = x * 0.5;
       leftEye.rotation.x = -y * 0.5;
 
