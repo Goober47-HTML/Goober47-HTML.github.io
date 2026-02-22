@@ -1,43 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-  <script>
-  function playAnimation(name) {
-    const model = document.getElementById('bulborb');
-    model.animationName = name;
-    model.play();
-  }
-
-  // run when the page finishes loading
-  window.addEventListener('load', () => {
-    playAnimation('Idle');
-  });
-</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
-  <!-- Favicon (must be in the same folder as index.html) -->
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-
   <title>WEBSITE!!</title>
 </head>
 <body>
 
-  <h1>HELLO!</h1>
+<h1>HELLO!</h1>
 
-<p style="font-family: 'Comic Sans MS'">
-  i am bulborb
-
-<p style="font-family: 'Comic Sans MS'">
-  |
-
-</p>
-<p style="font-family: 'Comic Sans MS'">
-  \/
-
-</p>
+<p style="font-family: 'Comic Sans MS'">i am bulborb</p>
+<p style="font-family: 'Comic Sans MS'">|</p>
+<p style="font-family: 'Comic Sans MS'">\/</p>
 
 <model-viewer id="bulborb"
               src="model.glb"
@@ -45,56 +21,51 @@
               camera-controls
               auto-rotate
               shadow-intensity="1"
-  
               style="width: 600px; height: 400px;">
 </model-viewer>
 
 <!-- Animation Buttons -->
-  
 <button onclick="playAnimation('Walk')">Walk</button>
 <button onclick="playAnimation('Idle')">Idle</button>
-
-
-<script>
-  function playAnimation(name) {
-    const model = document.getElementById('bulborb');
-    model.animationName = name;
-    model.play();
-  }
-
-  // Wait for the MODEL to finish loading, not just the page
-  document.getElementById('bulborb').addEventListener('load', () => {
-    playAnimation('Idle');
-  });
-</script>
 
 <script>
   const modelViewer = document.getElementById('bulborb');
 
+  function playAnimation(name) {
+    modelViewer.animationName = name;
+    modelViewer.play();
+  }
+
   modelViewer.addEventListener('load', () => {
+    // Start idle animation
     playAnimation('Idle');
 
-    const model = modelViewer.model;
+    const root = modelViewer.model.scene; // correct root
 
     // Recursively search for a node by name
-    function findNode(root, name) {
-      if (root.name === name) return root;
-      for (const child of root.children || []) {
+    function findNode(node, name) {
+      if (node.name === name) return node;
+      if (!node.children) return null;
+      for (const child of node.children) {
         const result = findNode(child, name);
         if (result) return result;
       }
       return null;
     }
 
-    // Find the eye bones anywhere in the hierarchy
-    const leftEye = findNode(model, 'leye');
-    const rightEye = findNode(model, 'reye');
+    // Find the eye bones
+    const leftEye = findNode(root, 'leye');
+    const rightEye = findNode(root, 'reye');
+
+    console.log("Left eye:", leftEye);
+    console.log("Right eye:", rightEye);
 
     if (!leftEye || !rightEye) {
-      console.warn("Eye bones found?", leftEye, rightEye);
+      console.warn("Could not find eye bones — but they ARE in the file.");
       return;
     }
 
+    // Mouse tracking
     window.addEventListener('mousemove', (event) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = (event.clientY / window.innerHeight) * 2 - 1;
@@ -107,18 +78,10 @@
     });
   });
 </script>
-  
+
 <a href="models.html">
   <button>Go Back</button>
 </a>
 
-
 </body>
 </html>
-
-
-
-
-
-
-
