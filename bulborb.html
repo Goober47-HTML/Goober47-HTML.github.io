@@ -24,7 +24,6 @@
               style="width: 600px; height: 400px;">
 </model-viewer>
 
-<!-- Animation Buttons -->
 <button onclick="playAnimation('Walk')">Walk</button>
 <button onclick="playAnimation('Idle')">Idle</button>
 
@@ -36,13 +35,18 @@
     modelViewer.play();
   }
 
-  modelViewer.addEventListener('load', () => {
-    // Start idle animation
+  // SAFE LOAD HANDLER
+  modelViewer.addEventListener('model-visibility', async () => {
+    // Wait until model is fully ready
+    while (!modelViewer.model || !modelViewer.model.scene) {
+      await new Promise(r => setTimeout(r, 50));
+    }
+
     playAnimation('Idle');
 
-    const root = modelViewer.model.scene; // correct root
+    const root = modelViewer.model.scene;
 
-    // Recursively search for a node by name
+    // Recursive search
     function findNode(node, name) {
       if (node.name === name) return node;
       if (!node.children) return null;
@@ -53,7 +57,6 @@
       return null;
     }
 
-    // Find the eye bones
     const leftEye = findNode(root, 'leye');
     const rightEye = findNode(root, 'reye');
 
@@ -61,11 +64,10 @@
     console.log("Right eye:", rightEye);
 
     if (!leftEye || !rightEye) {
-      console.warn("Could not find eye bones — but they ARE in the file.");
+      console.warn("Eye bones not found — but they ARE in the GLB.");
       return;
     }
 
-    // Mouse tracking
     window.addEventListener('mousemove', (event) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = (event.clientY / window.innerHeight) * 2 - 1;
