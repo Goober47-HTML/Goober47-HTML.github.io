@@ -69,26 +69,29 @@
 </script>
 
 <script>
-  function playAnimation(name) {
-    const model = document.getElementById('bulborb');
-    model.animationName = name;
-    model.play();
-  }
-
   const modelViewer = document.getElementById('bulborb');
 
-  // Start Idle animation when model is actually ready
-  modelViewer.addEventListener('model-visibility', () => {
+  modelViewer.addEventListener('load', () => {
     playAnimation('Idle');
 
     const model = modelViewer.model;
 
-    // TODO: update these names after checking your GLB
-    const leftEye = model.getObjectByName('leye');
-    const rightEye = model.getObjectByName('reye');
+    // Recursively search for a node by name
+    function findNode(root, name) {
+      if (root.name === name) return root;
+      for (const child of root.children || []) {
+        const result = findNode(child, name);
+        if (result) return result;
+      }
+      return null;
+    }
+
+    // Find the eye bones anywhere in the hierarchy
+    const leftEye = findNode(model, 'leye');
+    const rightEye = findNode(model, 'reye');
 
     if (!leftEye || !rightEye) {
-      console.warn("Eye bones not found — check exact names in the GLB");
+      console.warn("Eye bones found?", leftEye, rightEye);
       return;
     }
 
