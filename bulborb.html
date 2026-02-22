@@ -35,9 +35,7 @@
     modelViewer.play();
   }
 
-  // SAFE LOAD HANDLER
   modelViewer.addEventListener('model-visibility', async () => {
-    // Wait until model is fully ready
     while (!modelViewer.model || !modelViewer.model.scene) {
       await new Promise(r => setTimeout(r, 50));
     }
@@ -46,7 +44,6 @@
 
     const root = modelViewer.model.scene;
 
-    // Recursive search
     function findNode(node, name) {
       if (node.name === name) return node;
       if (!node.children) return null;
@@ -60,17 +57,25 @@
     const leftEye = findNode(root, 'leye');
     const rightEye = findNode(root, 'reye');
 
-    console.log("Left eye:", leftEye);
-    console.log("Right eye:", rightEye);
+    console.log("FOUND leftEye:", leftEye);
+    console.log("FOUND rightEye:", rightEye);
 
     if (!leftEye || !rightEye) {
-      console.warn("Eye bones not found — but they ARE in the GLB.");
+      console.warn("Eyes not found");
       return;
     }
+
+    // Log rotation every frame
+    modelViewer.addEventListener('frame', () => {
+      console.log("LeftEye rot:", leftEye.rotation.x, leftEye.rotation.y, leftEye.rotation.z);
+      console.log("RightEye rot:", rightEye.rotation.x, rightEye.rotation.y, rightEye.rotation.z);
+    });
 
     window.addEventListener('mousemove', (event) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = (event.clientY / window.innerHeight) * 2 - 1;
+
+      console.log("Setting rotation to:", x, y);
 
       leftEye.rotation.y = x * 0.5;
       leftEye.rotation.x = -y * 0.5;
