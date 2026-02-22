@@ -50,8 +50,13 @@
     const model = document.getElementById('bulborb');
     model.animationName = name;
     model.play();
-    playAnimation('Idle')
+    
   }
+</script>
+  <script>
+  window.addEventListener('load', () => {
+    playAnimation('Idle');
+  });
 </script>
 
 
