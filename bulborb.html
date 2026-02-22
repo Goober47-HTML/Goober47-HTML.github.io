@@ -29,6 +29,7 @@
 
 <script>
   console.log("SCRIPT LOADED");
+
   const modelViewer = document.getElementById('bulborb');
 
   function playAnimation(name) {
@@ -36,18 +37,36 @@
     modelViewer.play();
   }
 
-  modelViewer.addEventListener('model-visibility', async () => {
+  // Correct event — fires when the GLB is fully parsed
+  modelViewer.addEventListener('load', async () => {
+    console.log("LOAD EVENT FIRED");
+
+    // Wait until model + scene exist
     while (!modelViewer.model || !modelViewer.model.scene) {
+      console.log("Waiting for model.scene...");
       await new Promise(r => setTimeout(r, 50));
     }
-    modelViewer.addEventListener('model-visibility', () => {
-  console.log("MODEL-VISIBILITY FIRED");
-});
+
+    console.log("MODEL + SCENE READY");
 
     playAnimation('Idle');
 
     const root = modelViewer.model.scene;
 
+    // Debug: print entire tree
+    function printTree(node, depth = 0) {
+      console.log(" ".repeat(depth * 2) + "- " + node.name);
+      if (node.children) {
+        for (const child of node.children) {
+          printTree(child, depth + 1);
+        }
+      }
+    }
+
+    console.log("=== SCENE GRAPH ===");
+    printTree(root);
+
+    // Recursive search
     function findNode(node, name) {
       if (node.name === name) return node;
       if (!node.children) return null;
@@ -71,8 +90,8 @@
 
     // Log rotation every frame
     modelViewer.addEventListener('frame', () => {
-      console.log("LeftEye rot:", leftEye.rotation.x, leftEye.rotation.y, leftEye.rotation.z);
-      console.log("RightEye rot:", rightEye.rotation.x, rightEye.rotation.y, rightEye.rotation.z);
+      console.log("LeftEye rot:", leftEye.rotation);
+      console.log("RightEye rot:", rightEye.rotation);
     });
 
     window.addEventListener('mousemove', (event) => {
